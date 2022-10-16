@@ -1,9 +1,8 @@
 import { NgModule } from '@angular/core';
-
 import { CreateTaskRoutingModule } from './create-task-routing.module';
-import { CreateTaskComponent } from './create-task.component';
 import { SharedModule } from '../shared/shared.module';
 
+import { CreateTaskComponent } from './components/create-task.component';
 
 @NgModule({
   declarations: [

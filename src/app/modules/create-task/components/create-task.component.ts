@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { CreateTaskForm } from 'src/app/models/interfaces/create-task-form';
+import { TaskService } from 'src/app/services/task.service';
+import { UtilityService } from 'src/app/services/utility.service';
 
 @Component({
   selector: 'app-create-task',
@@ -11,14 +13,14 @@ import { CreateTaskForm } from 'src/app/models/interfaces/create-task-form';
 export class CreateTaskComponent implements OnInit {
   date = new Date();
   createTaskFromGroup = new FormGroup<CreateTaskForm>({
-    name: new FormControl(null, Validators.required),
+    name: new FormControl(null, [Validators.required, Validators.minLength(4), Validators.maxLength(12)]),
     description: new FormControl(''),
     status: new FormControl(null, Validators.required),
     priority: new FormControl(1, { nonNullable: true }),
     dateCreated: new FormControl({ day: this.date.getDate(), month: this.date.getMonth(), year: this.date.getFullYear() }, { nonNullable: true })
   });
 
-  constructor() { }
+  constructor(private taskService: TaskService, private utilityService: UtilityService) { }
 
   ngOnInit(): void {
   }
@@ -27,7 +29,13 @@ export class CreateTaskComponent implements OnInit {
     this.createTaskFromGroup.markAllAsTouched();
 
     if (this.createTaskFromGroup.valid) {
-      console.log(this.createTaskFromGroup);
+      let params = this.createTaskFromGroup.value;
+      console.log(params);
+      params.dateCreated = this.utilityService.convertToDate(params.dateCreated);
+      console.log(params);
+      this.taskService.addNewTask(params);
+
+      this.createTaskFromGroup.reset();
     }
   }
 

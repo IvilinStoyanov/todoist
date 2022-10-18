@@ -1,1 +1,17 @@
-<p>tasks works!</p>
+<div class="container">
+  <div class="row mt-4">
+    <ng-container *ngFor="let task of tasks">
+      <div class="col-sm-6">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">{{ task.name }}</h5>
+            <p class="card-text">{{ task.description || 'No description added.'}}</p>
+            <a href="#" class="btn btn-primary">{{ task.status }}</a>
+            <ngb-rating [(rate)]="task.priority" [readonly]="true"></ngb-rating>
+            <p class="card-text"><small class="text-muted">{{ task.dateCreated | date }}</small></p>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</div>

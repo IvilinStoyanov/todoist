@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subscription } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Subject, Subscription } from 'rxjs';
+import { map, take, takeUntil, tap } from 'rxjs/operators';
 import { TaskService } from 'src/app/services/task.service';
 
 @Component({
@@ -9,21 +9,21 @@ import { TaskService } from 'src/app/services/task.service';
   styleUrls: ['./tasks.component.scss']
 })
 export class TasksComponent implements OnInit, OnDestroy {
-  private subscription: Subscription = new Subscription();
+  private destroy$: Subject<boolean> = new Subject();
   isChecked: boolean = true;
   tasks: any[] = [];
   constructor(private taskService: TaskService) { }
 
   ngOnInit(): void {
-    const taskSubscription$ = this.taskService.tasks$.subscribe(task => {
-      this.tasks.push(task);
-      console.log(task);
-    });
-
-    this.subscription.add(taskSubscription$);
+    this.taskService.tasks$.pipe(
+      takeUntil(this.destroy$))
+      .subscribe(task => {
+        this.tasks.push(task);
+      });
   }
 
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
+    this.destroy$.next(true);
+    this.destroy$.unsubscribe();
   }
 }

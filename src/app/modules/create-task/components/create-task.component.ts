@@ -30,9 +30,9 @@ export class CreateTaskComponent implements OnInit {
 
     if (this.createTaskFromGroup.valid) {
       let params = this.createTaskFromGroup.value;
-      console.log(params);
+
       params.dateCreated = this.utilityService.convertToDate(params.dateCreated);
-      console.log(params);
+
       this.taskService.addNewTask(params);
 
       this.createTaskFromGroup.reset();

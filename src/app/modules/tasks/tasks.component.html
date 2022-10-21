@@ -1,14 +1,19 @@
 <div class="container">
   <div class="row mt-4">
-    <ng-container *ngFor="let task of tasks">
-      <div class="col-sm-6">
+    <ng-container *ngFor="let task of taskService.tasks$ | async">
+      <div class="col-sm-4 p-2">
         <div class="card">
+          <div class="card-header">
+            {{ task.status }}
+          </div>
           <div class="card-body">
             <h5 class="card-title">{{ task.name }}</h5>
-            <p class="card-text">{{ task.description || 'No description added.'}}</p>
-            <a href="#" class="btn btn-primary">{{ task.status }}</a>
+            <p class="card-subtitle mb-2 text-muted">{{ task.description || 'No description added.'}}</p>
             <ngb-rating [(rate)]="task.priority" [readonly]="true"></ngb-rating>
             <p class="card-text"><small class="text-muted">{{ task.dateCreated | date }}</small></p>
+            <div class="text-end">
+              <button class="btn text-danger" (click)="openDeleteModal(task)">Delete Task</button>
+            </div>
           </div>
         </div>
       </div>

@@ -1,29 +1,37 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subject, Subscription } from 'rxjs';
-import { map, take, takeUntil, tap } from 'rxjs/operators';
+import { Component, OnInit } from '@angular/core';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { Task } from 'src/app/models/interfaces/Task';
 import { TaskService } from 'src/app/services/task.service';
+import { DeleteTaskComponent } from './modals/delete-task/delete-task.component';
 
 @Component({
   selector: 'app-tasks',
   templateUrl: './tasks.component.html',
   styleUrls: ['./tasks.component.scss']
 })
-export class TasksComponent implements OnInit, OnDestroy {
-  private destroy$: Subject<boolean> = new Subject();
+export class TasksComponent implements OnInit {
   isChecked: boolean = true;
   tasks: any[] = [];
-  constructor(private taskService: TaskService) { }
-
-  ngOnInit(): void {
-    this.taskService.tasks$.pipe(
-      takeUntil(this.destroy$))
-      .subscribe(task => {
-        this.tasks.push(task);
-      });
+  testTask: any = {
+    name: 'Test',
+    description: 'Test Desc'
   }
+  constructor(public taskService: TaskService, private modalService: NgbModal) { }
 
-  ngOnDestroy(): void {
-    this.destroy$.next(true);
-    this.destroy$.unsubscribe();
+  ngOnInit(): void { }
+
+  openDeleteModal(task: Task) {
+    const modalRef = this.modalService.open(DeleteTaskComponent, { backdrop: true, keyboard: true });
+    modalRef.componentInstance.task = task;
+
+    modalRef.result.then(
+      (result) => {
+        console.log(`Closed with: ${result}`);
+      },
+      (reason) => {
+        console.log(reason);
+        //	this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+      },
+    );
   }
 }

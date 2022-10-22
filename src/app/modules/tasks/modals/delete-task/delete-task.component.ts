@@ -13,8 +13,12 @@ export class DeleteTaskComponent implements OnInit {
 
   ngOnInit() { }
 
+  delete() {
+    this.activeModal.close(true);
+  }
+
   close() {
-    this.activeModal.close(this.task);
+    this.activeModal.close();
   }
 
 }

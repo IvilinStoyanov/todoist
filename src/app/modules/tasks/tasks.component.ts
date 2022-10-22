@@ -20,13 +20,14 @@ export class TasksComponent implements OnInit {
 
   ngOnInit(): void { }
 
-  openDeleteModal(task: Task) {
+  openDeleteModal(task: Task, index: number) {
     const modalRef = this.modalService.open(DeleteTaskComponent, { backdrop: true, keyboard: true });
     modalRef.componentInstance.task = task;
 
     modalRef.result.then(
       (result) => {
         console.log(`Closed with: ${result}`);
+        this.taskService.deleteTask(index);
       },
       (reason) => {
         console.log(reason);
